@@ -4,16 +4,17 @@
     <q-toolbar-title>SQL Query Runner</q-toolbar-title>
     <q-select
       v-model="store.currentDB"
+      emit-value
       class="q-mr-sm"
       :options="dbOptions"
       label="Database"
       outlined
       dense
-      color="white"
+      color="black"
     />
     <q-input
       v-model="historySearch"
-      color="white"
+      color="black"
       placeholder="Search Query History"
       dense
       outlined

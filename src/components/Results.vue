@@ -10,6 +10,9 @@
       title="Query Results"
       dense
       flat
+      virtual-scroll
+      :rows-per-page-options="[0]"
+      style="max-height: 400px"
     >
       <template v-slot:top-right>
         <q-input v-model="filter" placeholder="Search" dense />
@@ -53,10 +56,9 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 const store = useAppStore();
 const filter = ref<string>('');
 const pagination = ref<QTableProps['pagination']>({
-  sortBy: 'desc',
-  descending: false,
-  page: 1,
-  rowsPerPage: 10,
+  // sortBy: 'desc',
+  // descending: false,
+  rowsPerPage: 0,
 });
 const showChart = ref<boolean>(false);
 

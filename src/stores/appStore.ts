@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import alasql from 'alasql';
 import type { Ref } from 'vue';
+import { foodNutritionData } from './dummyData';
 
 interface Schema {
   [table: string]: string[];
@@ -22,7 +23,7 @@ interface Column {
 
 export const useAppStore = defineStore('app', () => {
   // State
-  const currentQuery: Ref<string> = ref('SELECT * FROM employees;');
+  const currentQuery: Ref<string> = ref('SELECT * FROM food;');
   const history: Ref<string[]> = ref(JSON.parse(localStorage.getItem('queryHistory') || '[]'));
   const favorites: Ref<string[]> = ref(JSON.parse(localStorage.getItem('favorites') || '[]'));
   const auditLog: Ref<string[]> = ref([]);
@@ -31,7 +32,7 @@ export const useAppStore = defineStore('app', () => {
   const metrics: Ref<string> = ref('');
   const error: Ref<string> = ref('');
   const loading: Ref<boolean> = ref(false);
-  const currentDB: Ref<string> = ref('employees');
+  const currentDB: Ref<string> = ref('food');
   const currentSchema: Ref<Schema> = ref({});
   const status: Ref<string> = ref('Connection: Active (In-Memory DB)');
   const leftDrawerOpen: Ref<boolean> = ref(true);
@@ -40,6 +41,9 @@ export const useAppStore = defineStore('app', () => {
   const schemas: { [key: string]: Schema } = {
     employees: { employees: ['id', 'name', 'salary', 'department'] },
     products: { products: ['id', 'name', 'price', 'stock'] },
+    food: {
+      food: ['id', 'name', 'calories', 'fat', 'carbs', 'protein', 'sodium', 'calcium', 'iron'],
+    },
   };
 
   // Init DB
@@ -50,10 +54,20 @@ export const useAppStore = defineStore('app', () => {
       alasql('CREATE TABLE employees (id INT, name STRING, salary INT, department STRING)');
       alasql("INSERT INTO employees VALUES (1, 'John Doe', 60000, 'IT')");
       alasql("INSERT INTO employees VALUES (2, 'Jane Smith', 75000, 'HR')");
-    } else {
+    } else if (dbName === 'products') {
       alasql('CREATE TABLE products (id INT, name STRING, price INT, stock INT)');
       alasql("INSERT INTO products VALUES (1, 'Laptop', 1000, 50)");
       alasql("INSERT INTO products VALUES (2, 'Phone', 500, 100)");
+    } else {
+      alasql(
+        'CREATE TABLE food (id INT, name STRING, calories INT, fat FLOAT, carbs INT, protien INT, sodium INT, calcium STRING, iron STRING)',
+      );
+
+      for (const food of foodNutritionData) {
+        alasql(
+          `INSERT INTO food VALUES (${food.id}, '${food.name}', ${food.calories}, ${food.fat}, ${food.carbs}, ${food.protein}, ${food.sodium}, '${food.calcium}', '${food.iron}')`,
+        );
+      }
     }
     currentSchema.value = schemas[dbName] ?? {};
     status.value = `Connection: Active (${dbName} DB)`;
