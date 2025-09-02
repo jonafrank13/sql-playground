@@ -39,6 +39,7 @@ const store = useAppStore();
 const historySearch = ref('');
 
 const dbOptions = [
+  { value: 'food', label: 'Food DB' },
   { value: 'employees', label: 'Employees DB' },
   { value: 'products', label: 'Products DB' },
 ];

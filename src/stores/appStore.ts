@@ -50,6 +50,7 @@ export const useAppStore = defineStore('app', () => {
   const initDB = (dbName: string): void => {
     alasql('DROP TABLE IF EXISTS employees');
     alasql('DROP TABLE IF EXISTS products');
+    alasql('DROP TABLE IF EXISTS food');
     if (dbName === 'employees') {
       alasql('CREATE TABLE employees (id INT, name STRING, salary INT, department STRING)');
       alasql("INSERT INTO employees VALUES (1, 'John Doe', 60000, 'IT')");
